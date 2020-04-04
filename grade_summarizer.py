@@ -1,5 +1,6 @@
 from canvasapi import Canvas
 import config
+import os
 
 def setTerms(courseList):
     for course in courseList:
@@ -33,12 +34,22 @@ def getCoursesForTerm(courses, sem):
             coursesInSem.append(course)
     return coursesInSem
 
+def gradesForCourse(course):
+    assignments = course.get_assignments()
+    submission = assignments[0].get_submission(os.environ['CANVAS_ID'])
+    print(submission.grade)
+    # for assignment in assignments:
+    # print(course.__dict__)
+
 def main():
-    canvas = Canvas(config.API_URL, config.API_KEY)
+    canvas = Canvas(os.environ['API_URL'], os.environ['API_KEY'])
     courses = canvas.get_courses()
 
     setTerms(courses);
-    classesInSem = getCoursesForTerm(courses, config.CurrentTerm)
+    coursesInSem = getCoursesForTerm(courses, "W20")
+    gradesForCourse(coursesInSem[0])
+    # for course in coursesInSem:
+
 
 
 if __name__ == '__main__':
